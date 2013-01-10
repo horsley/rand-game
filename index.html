@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>430随机数生成器</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap-tooltip.js"></script>
+
+    <style>
+        .result {
+            font: bold 500px/1.0 arial,sans-serif;
+            text-shadow: 0px 0px 20px #001;
+            filter: dropshadow(color=#001, offx=0, offy=0);
+            text-align: center;
+        }
+        button.info {
+            width: 300px;
+            height: 60px;
+            font-size: 25px ;
+            margin: 4em 0 1em;
+        }
+        .t-center {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<a href="https://github.com/horsley/rand-game">
+    <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub">
+</a>
+    <div class="container">
+        <div class="result">?</div>
+        <div class="t-center">
+            <button class="btn btn-primary btn-large info" id="make"
+                    rel="tooltip" title="不停点击按钮或者按住任意按键触发，停下来达到1.5之后秒自动揭晓，并冻结5秒"
+                    >生成随机数</button>
+        </div>
+        <div class="t-center">
+            Powered by Horsley
+        </div>
+    </div>
+
+</body>
+<script>
+    var my_random = 0;
+    var max_num = 1000;
+    var min_num = 1;
+    var charset = ["?", "#", "$", "%", "&"];
+    var click_count = 0;
+    var timer = 0;
+    function make_new_rand() {
+        my_random = Math.floor((Math.random() * max_num) + min_num);
+    }
+
+    $(function(){
+        $('.info').tooltip({placement: 'right'});
+        $(document).keypress(function(){
+            $('#make').click();
+        });
+        $('#make').click(function(){
+            if (timer) {
+                clearTimeout(timer);
+            }
+            if ($(this).hasClass('disabled')) return;
+            make_new_rand();
+            click_count++;
+            $('.result').html(charset[click_count % charset.length]);
+            timer = setTimeout(showResult, 1500);
+        });
+
+        function showResult() {
+            if ($(this).hasClass('disabled')) return;
+            $('.result').html(my_random);
+            //lock
+            $('button').addClass('disabled');
+            setTimeout(function() {
+                $('button').removeClass('disabled'); //unlock
+            }, 5000);
+        };
+
+    });
+</script>
+</html>
